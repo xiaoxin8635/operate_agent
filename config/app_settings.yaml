@@ -1,0 +1,50 @@
+# =====================================================================
+# 应用业务参数配置（密钥类配置请放 .env，不要写在这里）
+# 优先级：环境变量 > 本文件 > 代码默认值
+# =====================================================================
+
+mysql:
+  host: "127.0.0.1"
+  port: 3307
+  user: "root"
+  dw_database: "dw_ecom"        # 数仓库：模拟电商数据
+  meta_database: "meta_db"      # 元数据库：表/字段/指标口径
+  pool_size: 5                  # 连接池大小
+  pool_recycle: 3600            # 连接回收时间（秒）
+
+qdrant:
+  url: "http://127.0.0.1:6333"
+  field_collection: "field_index"     # 字段向量集合
+  metric_collection: "metric_index"   # 指标向量集合
+
+es:
+  host: "http://127.0.0.1:9200"
+  value_index: "field_value_index"    # 字段取值全文索引
+  top_values_per_field: 100           # 每个字段聚合的高频取值上限
+
+llm:
+  base_url: "https://api.deepseek.com/v1"   # DeepSeek OpenAI 兼容端点
+  model: "deepseek-chat"
+  temperature: 0.0                     # 问数场景要求确定性输出
+  max_tokens: 2048
+  timeout: 60                          # 单次调用超时（秒）
+
+embedding:
+  model_name: "BAAI/bge-small-zh-v1.5"  # 中文小模型，512 维，CPU 可跑
+  device: "cpu"
+  batch_size: 64
+  cache_dir: "models_cache"             # 模型缓存目录（国内镜像下载后落在此处）
+
+recall:
+  field_top_k: 20                       # 字段向量召回数量
+  metric_top_k: 5                       # 指标向量召回数量
+  field_score_threshold: 0.6            # 字段召回得分阈值（低于丢弃）
+  metric_score_threshold: 0.6           # 指标召回得分阈值
+  es_size: 10                           # ES 取值召回条数
+
+graph:
+  max_repair_rounds: 3                  # SQL 纠错最大轮数
+  sql_max_limit: 1000                   # SQL 强制 LIMIT 上限
+  sql_timeout_seconds: 10               # SQL 执行超时
+  result_row_limit: 200                 # 返回结果行数截断
+  enable_answer_summary: true           # 是否由 LLM 生成自然语言回答

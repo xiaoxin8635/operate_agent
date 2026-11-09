@@ -1,0 +1,39 @@
+# =====================================================================
+# Python 依赖清单（Python 3.10+）
+# 安装：pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+# =====================================================================
+
+# ---------- Web 服务 ----------
+fastapi>=0.115.0                 # Web 框架
+uvicorn[standard]>=0.30.6        # ASGI 服务器
+sse-starlette>=2.1.3             # SSE 流式响应支持
+pydantic>=2.9.2                  # 数据模型校验
+pydantic-settings>=2.5.2         # 配置管理（支持 .env + YAML 双来源）
+typing_extensions>=4.12.0        # TypedDict 等 typing 扩展（state 定义使用）
+httpx>=0.27.0                    # HTTP 客户端
+
+# ---------- 数据库 ----------
+SQLAlchemy>=2.0.35               # ORM / 连接池
+PyMySQL>=1.1.1                   # MySQL 驱动
+cryptography>=43.0.0             # PyMySQL caching_sha2_password 认证依赖
+
+# ---------- 检索存储 ----------
+qdrant-client>=1.12.0            # 向量数据库客户端
+elasticsearch>=8.15.0            # ES 全文检索客户端
+
+# ---------- LLM / Agent ----------
+langchain>=0.3.5                 # LLM 应用框架（Prompt 模板）
+langchain-openai>=0.2.8          # OpenAI 兼容接口（DeepSeek 使用）
+langgraph>=0.2.50                # 状态图编排（12 节点流水线）
+openai>=1.54.0                   # LLM SDK
+
+# ---------- Embedding ----------
+sentence-transformers>=3.2.0     # BGE 模型加载与推理（自动安装 torch CPU 版）
+
+# ---------- SQL 处理 ----------
+sqlglot>=25.20.0                 # SQL 解析/AST 校验（MySQL 方言）
+
+# ---------- 工具 ----------
+PyYAML>=6.0.2                    # 元数据 YAML 解析
+loguru>=0.7.2                    # 结构化日志
+Faker>=30.0.0                    # 模拟数据生成（M2 使用）

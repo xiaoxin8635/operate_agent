@@ -1,0 +1,68 @@
+# =====================================================================
+# 经营分析 Agent 基础设施编排
+# 包含：MySQL 8（DW 数仓 + Meta 元数据库）、Elasticsearch 8、Qdrant
+# 使用：项目根目录执行 docker compose up -d
+# =====================================================================
+services:
+  # ---------------- MySQL：dw_ecom(数仓) + meta_db(元数据) 双库 ----------------
+  mysql:
+    image: mysql:8.0
+    container_name: oa-mysql
+    restart: unless-stopped
+    ports:
+      - "3307:3306"            # 映射到宿主机 3307，避免与本机已有 MySQL 冲突
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      TZ: Asia/Shanghai
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/init_sql:/docker-entrypoint-initdb.d:ro   # 首次启动自动建库
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --max_connections=200
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # ---------------- Elasticsearch：字段取值全文索引 ----------------
+  elasticsearch:
+    image: elasticsearch:8.11.0
+    container_name: oa-es
+    restart: unless-stopped
+    ports:
+      - "9200:9200"
+    environment:
+      - discovery.type=single-node       # 单节点开发模式
+      - xpack.security.enabled=false     # 关闭安全认证（仅开发环境）
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m   # 限制 JVM 内存，防止本机吃满
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"\\|\"status\":\"yellow\"'"]
+      interval: 15s
+      timeout: 10s
+      retries: 12
+
+  # ---------------- Qdrant：字段/指标向量索引 ----------------
+  qdrant:
+    image: qdrant/qdrant:v1.12.4
+    container_name: oa-qdrant
+    restart: unless-stopped
+    ports:
+      - "6333:6333"            # HTTP API
+      - "6334:6334"            # gRPC
+    volumes:
+      - qdrant_data:/qdrant/storage
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c ':<(/dev/tcp/localhost/6333)' 2>/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mysql_data:
+  es_data:
+  qdrant_data:
