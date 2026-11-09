@@ -1,0 +1,59 @@
+# =====================================================================
+# 用户维表元数据（dw_users）
+# =====================================================================
+table:
+  name: dw_users
+  alias: 用户表
+  desc: 电商用户维表，记录用户昵称、性别、年龄、城市、会员等级与注册信息
+  layer: dw
+  owner: data-team
+
+fields:
+  - name: user_id
+    alias: 用户ID
+    desc: 用户唯一编号
+    type: BIGINT
+    examples: [100001]
+    searchable: false
+
+  - name: user_name
+    alias: 用户昵称
+    desc: 用户昵称，如"用户8a3f2c"
+    type: VARCHAR(64)
+    examples: ["用户8a3f2c"]
+    searchable: false
+
+  - name: gender
+    alias: 性别
+    desc: 用户性别：男、女
+    type: VARCHAR(8)
+    examples: ["男", "女"]
+    searchable: true
+
+  - name: age
+    alias: 年龄
+    desc: 用户年龄
+    type: INT
+    examples: [18, 25, 34]
+    searchable: false
+
+  - name: city
+    alias: 城市
+    desc: 用户所在城市，如北京、上海、广州、深圳、杭州
+    type: VARCHAR(32)
+    examples: ["北京", "上海", "广州", "深圳", "杭州", "成都", "武汉", "南京", "重庆", "西安"]
+    searchable: true
+
+  - name: user_level
+    alias: 会员等级
+    desc: 用户会员等级：普通会员、银卡会员、金卡会员、钻石会员
+    type: VARCHAR(16)
+    examples: ["普通会员", "银卡会员", "金卡会员", "钻石会员"]
+    searchable: true
+
+  - name: register_date
+    alias: 注册日期
+    desc: 用户注册日期，格式 YYYY-MM-DD
+    type: DATE
+    examples: ["2025-03-15"]
+    searchable: false

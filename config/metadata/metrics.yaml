@@ -1,0 +1,60 @@
+# =====================================================================
+# 业务指标口径定义（统一指标计算口径，消除歧义）
+# alias 列表中的每个别名都会参与向量召回，覆盖用户口语化表达
+# =====================================================================
+metrics:
+  - name: gmv
+    alias: ["GMV", "商品交易总额", "销售额", "交易额", "成交额"]
+    desc: 商品交易总额（支付口径），统计用户实际支付的总金额
+    formula: "SUM(pay_amount)"
+    table: dw_orders
+    related_fields: ["pay_amount", "pay_date", "order_status"]
+
+  - name: order_cnt
+    alias: ["订单量", "订单数", "订单笔数", "下单量"]
+    desc: 订单数量，按订单去重统计（含全部状态）
+    formula: "COUNT(DISTINCT order_id)"
+    table: dw_orders
+    related_fields: ["order_id", "order_date"]
+
+  - name: avg_order_value
+    alias: ["客单价", "平均订单金额", "单均"]
+    desc: 客单价，平均每笔订单的支付金额 = GMV / 订单量
+    formula: "SUM(pay_amount) / COUNT(DISTINCT order_id)"
+    table: dw_orders
+    related_fields: ["pay_amount", "order_id"]
+
+  - name: refund_rate
+    alias: ["退款率", "退货率", "退款比例"]
+    desc: 退款率 = 退款金额合计 / 支付金额合计
+    formula: "SUM(refund_amount) / SUM(pay_amount)"
+    table: dw_orders
+    related_fields: ["refund_amount", "pay_amount"]
+
+  - name: refund_amount
+    alias: ["退款金额", "退款总额", "退款的钱"]
+    desc: 退款金额合计，统计已退款订单的退款总金额
+    formula: "SUM(refund_amount)"
+    table: dw_orders
+    related_fields: ["refund_amount", "order_status"]
+
+  - name: pay_user_cnt
+    alias: ["支付用户数", "购买用户数", "付款人数", "成交用户数"]
+    desc: 支付用户数，有支付行为的去重用户数量
+    formula: "COUNT(DISTINCT user_id)"
+    table: dw_orders
+    related_fields: ["user_id", "pay_date"]
+
+  - name: pv
+    alias: ["浏览量", "PV", "页面浏览量", "曝光量"]
+    desc: 页面浏览量，商品详情页被浏览的总次数
+    formula: "SUM(pv)"
+    table: dw_traffic
+    related_fields: ["pv", "stat_date"]
+
+  - name: uv
+    alias: ["访客数", "UV", "独立访客数", "访问人数"]
+    desc: 独立访客数，去重后的访问用户数量
+    formula: "SUM(uv)"
+    table: dw_traffic
+    related_fields: ["uv", "stat_date"]

@@ -1,0 +1,102 @@
+# =====================================================================
+# 订单事实表元数据（dw_orders）
+# searchable: true 的字段其取值会进入 ES 全文索引，支撑"值→字段"召回
+# =====================================================================
+table:
+  name: dw_orders
+  alias: 订单表
+  desc: 电商订单事实表，记录用户下单、支付与退款明细，是 GMV、订单量、退款率等交易指标的主要来源
+  layer: dw
+  owner: data-team
+
+fields:
+  - name: order_id
+    alias: 订单ID
+    desc: 订单唯一编号，ORD 开头的字符串
+    type: VARCHAR(32)
+    examples: ["ORD20261108123456"]
+    searchable: false
+
+  - name: user_id
+    alias: 用户ID
+    desc: 下单用户编号，关联 dw_users.user_id
+    type: BIGINT
+    examples: [100001]
+    searchable: false
+
+  - name: product_id
+    alias: 商品ID
+    desc: 商品编号，关联 dw_products.product_id
+    type: BIGINT
+    examples: [200001]
+    searchable: false
+
+  - name: channel
+    alias: 下单渠道
+    desc: 订单来源渠道，如淘宝、抖音、京东、拼多多、小程序
+    type: VARCHAR(32)
+    examples: ["淘宝", "抖音", "京东", "拼多多", "小程序"]
+    searchable: true
+
+  - name: brand
+    alias: 品牌
+    desc: 订单商品的品牌名称
+    type: VARCHAR(64)
+    examples: ["完美日记", "花西子", "华为", "小米", "苹果", "优衣库", "耐克", "李宁", "三只松鼠", "元气森林"]
+    searchable: true
+
+  - name: order_status
+    alias: 订单状态
+    desc: 订单当前状态：已完成、已退款、待付款、已发货
+    type: VARCHAR(16)
+    examples: ["已完成", "已退款", "待付款", "已发货"]
+    searchable: true
+
+  - name: order_amount
+    alias: 订单金额
+    desc: 商品原价合计（未扣除优惠），单位元
+    type: DECIMAL(12,2)
+    examples: [199.00, 358.50]
+    searchable: false
+
+  - name: discount_amount
+    alias: 优惠金额
+    desc: 订单优惠总金额（优惠券、满减等），单位元
+    type: DECIMAL(12,2)
+    examples: [20.00, 35.90]
+    searchable: false
+
+  - name: pay_amount
+    alias: 支付金额
+    desc: 用户实际支付金额 = 订单金额 - 优惠金额，单位元；GMV 口径的核心金额字段
+    type: DECIMAL(12,2)
+    examples: [179.00, 322.60]
+    searchable: false
+
+  - name: refund_amount
+    alias: 退款金额
+    desc: 退款金额，仅状态为已退款的订单大于 0，其余为 0，单位元
+    type: DECIMAL(12,2)
+    examples: [0.00, 179.00]
+    searchable: false
+
+  - name: quantity
+    alias: 购买数量
+    desc: 商品购买件数
+    type: INT
+    examples: [1, 2, 3]
+    searchable: false
+
+  - name: order_date
+    alias: 下单日期
+    desc: 订单创建日期，格式 YYYY-MM-DD
+    type: DATE
+    examples: ["2026-11-08"]
+    searchable: false
+
+  - name: pay_date
+    alias: 支付日期
+    desc: 支付完成日期，格式 YYYY-MM-DD；待付款订单为空；GMV 等支付口径指标按此日期统计
+    type: DATE
+    examples: ["2026-11-08"]
+    searchable: false

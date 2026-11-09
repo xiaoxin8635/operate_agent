@@ -1,0 +1,59 @@
+# =====================================================================
+# 商品维表元数据（dw_products）
+# =====================================================================
+table:
+  name: dw_products
+  alias: 商品表
+  desc: 电商商品维表，记录商品名称、类目、品牌、售价与库存信息
+  layer: dw
+  owner: data-team
+
+fields:
+  - name: product_id
+    alias: 商品ID
+    desc: 商品唯一编号
+    type: BIGINT
+    examples: [200001]
+    searchable: false
+
+  - name: product_name
+    alias: 商品名称
+    desc: 商品完整名称，含品牌与品类词，如"完美日记小细跟口红"
+    type: VARCHAR(128)
+    examples: ["完美日记小细跟口红", "华为Mate70 Pro"]
+    searchable: true
+
+  - name: category_id
+    alias: 类目ID
+    desc: 商品所属类目编号，关联 dw_categories.category_id
+    type: INT
+    examples: [101]
+    searchable: false
+
+  - name: brand
+    alias: 品牌
+    desc: 商品品牌名称
+    type: VARCHAR(64)
+    examples: ["完美日记", "华为", "小米"]
+    searchable: true
+
+  - name: price
+    alias: 商品单价
+    desc: 商品标准售价，单位元
+    type: DECIMAL(10,2)
+    examples: [89.90, 4999.00]
+    searchable: false
+
+  - name: stock
+    alias: 库存
+    desc: 商品当前库存件数
+    type: INT
+    examples: [500, 1200]
+    searchable: false
+
+  - name: shelf_date
+    alias: 上架日期
+    desc: 商品上架日期，格式 YYYY-MM-DD
+    type: DATE
+    examples: ["2025-06-01"]
+    searchable: false

@@ -1,0 +1,38 @@
+# =====================================================================
+# 类目维表元数据（dw_categories）
+# =====================================================================
+table:
+  name: dw_categories
+  alias: 类目表
+  desc: 电商商品类目维表，两级类目结构，记录类目名称与父子关系
+  layer: dw
+  owner: data-team
+
+fields:
+  - name: category_id
+    alias: 类目ID
+    desc: 类目唯一编号
+    type: INT
+    examples: [101]
+    searchable: false
+
+  - name: category_name
+    alias: 类目名称
+    desc: 类目名称，含一级与二级类目，如"美妆护肤-口红"、"数码家电-手机"
+    type: VARCHAR(64)
+    examples: ["口红", "手机", "羽绒服", "坚果零食"]
+    searchable: true
+
+  - name: parent_category_id
+    alias: 父类目ID
+    desc: 上级类目编号，二级类目指向所属一级类目，一级类目该值为空
+    type: INT
+    examples: [101]
+    searchable: false
+
+  - name: parent_category_name
+    alias: 一级类目
+    desc: 所属一级类目名称，如美妆护肤、数码家电、服饰鞋包、食品饮料
+    type: VARCHAR(64)
+    examples: ["美妆护肤", "数码家电", "服饰鞋包", "食品饮料", "母婴亲子", "家居日用"]
+    searchable: true

@@ -1,0 +1,45 @@
+# =====================================================================
+# 流量事实表元数据（dw_traffic）
+# =====================================================================
+table:
+  name: dw_traffic
+  alias: 流量表
+  desc: 电商流量事实表，按日期、渠道、商品粒度记录页面浏览量与独立访客数，是 UV、PV、转化分析的数据来源
+  layer: dw
+  owner: data-team
+
+fields:
+  - name: stat_date
+    alias: 统计日期
+    desc: 流量统计日期，格式 YYYY-MM-DD
+    type: DATE
+    examples: ["2026-11-08"]
+    searchable: false
+
+  - name: channel
+    alias: 流量渠道
+    desc: 流量来源渠道，如淘宝、抖音、京东、拼多多、小程序
+    type: VARCHAR(32)
+    examples: ["淘宝", "抖音", "京东", "拼多多", "小程序"]
+    searchable: true
+
+  - name: product_id
+    alias: 商品ID
+    desc: 被浏览的商品编号，关联 dw_products.product_id
+    type: BIGINT
+    examples: [200001]
+    searchable: false
+
+  - name: pv
+    alias: 浏览量
+    desc: 页面浏览次数（Page View）
+    type: INT
+    examples: [3500, 12000]
+    searchable: false
+
+  - name: uv
+    alias: 访客数
+    desc: 独立访客数（Unique Visitor），去重后的访问用户数
+    type: INT
+    examples: [1200, 4500]
+    searchable: false
